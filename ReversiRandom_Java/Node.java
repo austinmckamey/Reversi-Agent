@@ -24,6 +24,8 @@ class Node {
     int numValidMoves;
 
 	int score;
+	int alpha;
+	int beta;
 
 	public Node(Node parent, int me, int[][] state, int depth, int turn, int round, int numValidMoves, int[] validMoves) {
 		this.parent = parent;
