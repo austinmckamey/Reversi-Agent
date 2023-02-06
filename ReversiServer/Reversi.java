@@ -1,6 +1,4 @@
 
-import javax.swing.*;
-import java.awt.event.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,7 +9,7 @@ import java.io.*;
 
 
 
-class MyCanvas extends JComponent {
+class myCanvas extends JComponent {
     int width, height;
     int sqrWdth, sqrHght;
     Color gris = new Color(230,230,230);
@@ -23,7 +21,7 @@ class MyCanvas extends JComponent {
     boolean gameOver = false;
     int winner;
     
-    public MyCanvas(int w, int h) {
+    public myCanvas(int w, int h) {
         //System.out.println("MyCanvas");
         width = w;
         height = h;
@@ -252,7 +250,7 @@ class MyCanvas extends JComponent {
 
 public class Reversi extends JFrame {
     Color bkgroundColor = new Color(200,160,120);
-    static MyCanvas canvas;
+    static myCanvas canvas;
     static int state[][] = new int[8][8];
     
     static String fnombre;
@@ -269,7 +267,7 @@ public class Reversi extends JFrame {
         getContentPane().setBackground(bkgroundColor);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, width, height);
-        canvas = new MyCanvas(width, height);
+        canvas = new myCanvas(width, height);
         getContentPane().add(canvas);
         
         setVisible(true);

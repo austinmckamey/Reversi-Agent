@@ -1,12 +1,7 @@
-import java.awt.*;
 import java.util.*;
-import java.awt.event.*;
 import java.lang.*;
 import java.io.*;
 import java.net.*;
-import javax.swing.*;
-import java.math.*;
-import java.text.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
