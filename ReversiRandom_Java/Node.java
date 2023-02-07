@@ -2,7 +2,7 @@ import java.util.*;
 
 class Node {
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		int[] valid = new int[64];
 		valid[0] = 27;
 		valid[1] = 28;
@@ -22,7 +22,7 @@ class Node {
     int turn;
     int round;
     
-    int[] validMoves = new int[64];
+    int[] validMoves;
     int numValidMoves;
 	int move;
 
@@ -101,9 +101,8 @@ class Node {
 		return length;
 	}
 
-	private int[] getValidMoves(int round, int state[][]) {
+	private int[] getValidMoves(int round, int[][] state) {
 		int i, j;
-
 		int[] valid = new int[64];
 		int num = 0;
 		if (round < 4) {
@@ -145,51 +144,50 @@ class Node {
 		return valid;
 	}
 
-	private boolean checkDirection(int state[][], int row, int col, int incx, int incy) {
-		int sequence[] = new int[7];
+	private boolean checkDirection(int[][] state, int row, int col, int incx, int incy) {
+		int[] sequence = new int[7];
 		int seqLen;
 		int i, r, c;
-
 		seqLen = 0;
 		for (i = 1; i < 8; i++) {
 			r = row+incy*i;
 			c = col+incx*i;
 
-			if ((r < 0) || (r > 7) || (c < 0) || (c > 7))
+			if ((r < 0) || (r > 7) || (c < 0) || (c > 7)) {
 				break;
+			}
 
 			sequence[seqLen] = state[r][c];
 			seqLen++;
 		}
-
 		int count = 0;
 		for (i = 0; i < seqLen; i++) {
 			if (me == 1) {
-				if (sequence[i] == 2)
-					count ++;
-				else {
-					if ((sequence[i] == 1) && (count > 0))
+				if (sequence[i] == 2) {
+					count++;
+				} else {
+					if ((sequence[i] == 1) && (count > 0)) {
 						return true;
+					}
 					break;
 				}
 			}
 			else {
-				if (sequence[i] == 1)
-					count ++;
-				else {
-					if ((sequence[i] == 2) && (count > 0))
+				if (sequence[i] == 1) {
+					count++;
+				} else {
+					if ((sequence[i] == 2) && (count > 0)) {
 						return true;
+					}
 					break;
 				}
 			}
 		}
-
 		return false;
 	}
 
-	private boolean couldBe(int state[][], int row, int col) {
+	private boolean couldBe(int[][] state, int row, int col) {
 		int incx, incy;
-
 		for (incx = -1; incx < 2; incx++) {
 			for (incy = -1; incy < 2; incy++) {
 				if ((incx == 0) && (incy == 0))
@@ -199,17 +197,16 @@ class Node {
 					return true;
 			}
 		}
-
 		return false;
 	}
 
 	private void pickBestChild() {
 		int max = -1;
 		Node child = null;
-		for (int i = 0; i < children.size(); i++) {
-			if (children.get(i).score > max) {
-				max = children.get(i).score;
-				child = children.get(i);
+		for (Node node : children) {
+			if (node.score > max) {
+				max = node.score;
+				child = node;
 			}
 		}
 		bestChild = child;
