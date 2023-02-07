@@ -8,11 +8,13 @@ class Node {
 		valid[1] = 28;
 		valid[2] = 35;
 		valid[3] = 36;
-		new Node(null, 1, new int[8][8], 0, 1, 0, 4, valid);
+		Node parent = new Node(null, 1, new int[8][8], 0, 1, 0, 4, valid, 0);
+		int move = parent.pickMove();
 	}
 
 	Node parent;
 	List<Node> children = new ArrayList();
+	Node bestChild;
 	int depth;
 
     int me;
@@ -22,12 +24,13 @@ class Node {
     
     int[] validMoves = new int[64];
     int numValidMoves;
+	int move;
 
 	int score;
 	int alpha;
 	int beta;
 
-	public Node(Node parent, int me, int[][] state, int depth, int turn, int round, int numValidMoves, int[] validMoves) {
+	public Node(Node parent, int me, int[][] state, int depth, int turn, int round, int numValidMoves, int[] validMoves, int move) {
 		this.parent = parent;
 		this.me = me;
 		this.state = state;
@@ -36,10 +39,12 @@ class Node {
 		this.round = round;
 		this.numValidMoves = numValidMoves;
 		this.validMoves = validMoves;
+		this.move = move;
 		calculateScore();
-		if (depth < 4) {
+		if (depth < 8) {
 			makeChildren();
 		}
+		pickBestChild();
 	}
 
 	private void calculateScore() {
@@ -54,7 +59,11 @@ class Node {
 				}
             }
         }
-		this.score = myCount - theirCount;
+		if(turn == me) {
+			score = myCount - theirCount;
+		} else {
+			score = theirCount - myCount;
+		}
 	}
 
 	private void makeChildren() {
@@ -68,7 +77,7 @@ class Node {
 			int[][] childrenState = getChildrenState(validMoves[i], childrenTurn);
 			int[] valid = getValidMoves(round+1, childrenState);
 			int num = getNumValidMoves(valid);
-			children.add(new Node(this, me, childrenState, depth+1, childrenTurn, round+1, num, valid));
+			children.add(new Node(this, me, childrenState, depth+1, childrenTurn, round+1, num, valid, validMoves[i]));
 		}
 	}
 
@@ -192,5 +201,21 @@ class Node {
 		}
 
 		return false;
+	}
+
+	private void pickBestChild() {
+		int max = -1;
+		Node child = null;
+		for (int i = 0; i < children.size(); i++) {
+			if (children.get(i).score > max) {
+				max = children.get(i).score;
+				child = children.get(i);
+			}
+		}
+		bestChild = child;
+	}
+
+	public int pickMove() {
+		return bestChild.move;
 	}
 }
