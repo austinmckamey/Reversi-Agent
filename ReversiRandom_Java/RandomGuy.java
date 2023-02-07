@@ -62,7 +62,7 @@ class RandomGuy {
     // validMoves is a list of valid locations that you could place your "stone" on this turn
     // Note that "state" is a global variable 2D list that shows the state of the game
     private int move() {
-        Node node = new Node(null, me, state, 0, turn, round, numValidMoves, validMoves, 0);
+        Node node = new Node(null, me, state, 0, turn, round, numValidMoves, validMoves, 0, -100000,100000);
         return node.pickMove();
     }
     

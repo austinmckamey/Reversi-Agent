@@ -35,7 +35,7 @@ public class Test {
 //                 {0,0,1,0,0,0,1,0},
 //                 {0,0,0,0,0,0,0,0},
 //                 {0,0,0,0,0,0,0,0}};
-        Node parent = new Node(null, 2, state, 0, 2, 15, 10, valid, 0);
+        Node parent = new Node(null, 2, state, 0, 2, 15, 10, valid, 0, -10000,10000);
         int move = parent.pickMove();
         System.out.println("Move:");
         System.out.println(move);

@@ -8,7 +8,7 @@ class Node {
 		valid[1] = 28;
 		valid[2] = 35;
 		valid[3] = 36;
-		Node parent = new Node(null, 1, new int[8][8], 0, 1, 0, 4, valid, 0);
+		Node parent = new Node(null, 1, new int[8][8], 0, 1, 0, 4, valid, 0, -10000, 10000);
 		int move = parent.pickMove();
 	}
 
@@ -26,11 +26,19 @@ class Node {
     int numValidMoves;
 	int move;
 
-	int score;
-	int alpha = -100000;
-	int beta = 100000;
+	double score;
+	double alpha = -100000;
+	double beta = 100000;
 
-	public Node(Node parent, int me, int[][] state, int depth, int turn, int round, int numValidMoves, int[] validMoves, int move) {
+	public void setAlpha(double alpha) {
+		this.alpha = alpha;
+	}
+
+	public void setBeta(double beta) {
+		this.beta = beta;
+	}
+
+	public Node(Node parent, int me, int[][] state, int depth, int turn, int round, int numValidMoves, int[] validMoves, int move , double alpha, double beta) {
 		this.parent = parent;
 		this.me = me;
 		this.state = state;
@@ -40,37 +48,76 @@ class Node {
 		this.numValidMoves = numValidMoves;
 		this.validMoves = validMoves;
 		this.move = move;
-		calculateScore();
+		this.alpha = alpha;
+		this.beta = beta;
 		if (depth < 5) {
 			makeChildren();
+			pickChild();
+		} else {
+			calculateScore();
 		}
-		pickBestChild();
 	}
 
 	private void calculateScore() {
-		int myCount = 0;
-		int theirCount = 0;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+		double count = calculateCount();
+		double corners = calculateCorners();
+		double edges = calcualteEdges();
+		double moves = calculateMoves();
+		double sum = count + corners + edges + moves;
+		count = count / sum;
+		corners = corners /sum;
+		edges = edges /sum;
+		moves = moves /sum;
+		score =  (count) + (corners * 10) + (edges * 2) + (moves * 4);
+		if (turn == me) {
+        	if (score > parent.alpha) {
+        		parent.alpha = score;
+			}
+		}
+        else {
+			if (score < parent.beta) {
+				parent.beta = score;
+			}
+		}
+	}
+	private double calculateCorners() {
+		double myCount = 0;
+		double thereCount = 0;
+		if (state[0][0] == me) {myCount++;} else if (state [0][0]!= 0) {thereCount++;}
+		if (state[0][7] == me) {myCount++;} else if (state [0][7]!= 0) {thereCount++;}
+		if (state[7][0] == me) {myCount++;} else if (state [7][0]!= 0) {thereCount++;}
+		if (state[7][7] == me) {myCount++;} else if (state [7][7]!= 0) {thereCount++;}
+		return myCount - thereCount;
+	}
+	private double calcualteEdges() {
+		double myCount = 0;
+		double thereCount = 0;
+		for (int i = 1; i < 7; i++) {if (state[0][i] == me) {myCount++;} else if (state [0][i]!= 0) {thereCount++;}}
+		for (int i = 1; i < 7; i++) {if (state[i][0] == me) {myCount++;} else if (state [i][0]!= 0) {thereCount++;}}
+		for (int i = 1; i < 7; i++) {if (state[i][7] == me) {myCount++;} else if (state [i][7]!= 0) {thereCount++;}}
+		for (int i = 1; i < 7; i++) {if (state[7][i] == me) {myCount++;} else if (state [7][i]!= 0) {thereCount++;}}
+		return myCount - thereCount;
+	}
+	private double calculateMoves() {
+		double count = 0;
+		for(int i = 0; validMoves[i] != 0; i++) {count++;}
+		return (double) count;
+	}
+
+	private double calculateCount() {
+		double myCount = 0;
+		double theirCount = 0;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
 				if (state[i][j] == me) {
 					myCount++;
 				} else if (state[i][j] != 0){
 					theirCount++;
 				}
-            }
-        }
-		score = myCount - theirCount;
-		if(turn == me) {
-			if (alpha < score) {
-				alpha = score;
-			}
-		} else {
-			if (beta > score) {
-				beta = score;
 			}
 		}
+		return myCount - theirCount;
 	}
-
 	private void makeChildren() {
 		int childrenTurn;
 		if (turn == 1) {
@@ -85,7 +132,7 @@ class Node {
 			int[][] childrenState = getChildrenState(validMoves[i], childrenTurn);
 			int[] valid = getValidMoves(round+1, childrenState);
 			int num = getNumValidMoves(valid);
-			children.add(new Node(this, me, childrenState, depth+1, childrenTurn, round+1, num, valid, validMoves[i]));
+			children.add(new Node(this, me, childrenState, depth+1, childrenTurn, round+1, num, valid, validMoves[i], alpha, beta));
 		}
 	}
 
@@ -208,9 +255,9 @@ class Node {
 		return false;
 	}
 
-	private void pickBestChild() {
-		int max = -1000;
-		int min = 1000;
+	private void pickChild() {
+		double max = -1000;
+		double min = 1000;
 		Node child = null;
 		if (this.turn == me) {
 			for (Node node : children) {
@@ -219,11 +266,23 @@ class Node {
 					child = node;
 				}
 			}
+			if (alpha < max) {
+				alpha = max;
+				if (parent != null) {
+					parent.beta = max;
+				}
+			}
 		} else {
 			for (Node node : children) {
 				if (node.score < min) {
 					min = node.score;
 					child = node;
+				}
+			}
+			if (beta > min) {
+				beta = min;
+				if (parent != null) {
+					parent.alpha = min;
 				}
 			}
 		}
