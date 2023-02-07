@@ -122,20 +122,20 @@ class Node {
 				valid[num] = 4*8 + 4;
 				num ++;
 			}
-			System.out.println("Valid Moves:");
-			for (i = 0; i < num; i++) {
-				System.out.println(valid[i] / 8 + ", " + valid[i] % 8);
-			}
+//			System.out.println("Valid Moves:");
+//			for (i = 0; i < num; i++) {
+//				System.out.println(valid[i] / 8 + ", " + valid[i] % 8);
+//			}
 		}
 		else {
-			System.out.println("Valid Moves:");
+//			System.out.println("Valid Moves:");
 			for (i = 0; i < 8; i++) {
 				for (j = 0; j < 8; j++) {
 					if (state[i][j] == 0) {
 						if (couldBe(state, i, j)) {
 							valid[num] = i*8 + j;
 							num ++;
-							System.out.println(i + ", " + j);
+//							System.out.println(i + ", " + j);
 						}
 					}
 				}
@@ -201,7 +201,7 @@ class Node {
 	}
 
 	private void pickBestChild() {
-		int max = -1;
+		int max = -1000;
 		Node child = null;
 		for (Node node : children) {
 			if (node.score > max) {
