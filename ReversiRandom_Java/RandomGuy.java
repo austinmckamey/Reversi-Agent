@@ -68,7 +68,7 @@ class RandomGuy {
     // Note that "state" is a global variable 2D list that shows the state of the game
     private int move() {
         int modulo = (turn == 2) ? 5 : 6;
-        if (random && round % modulo == 0 && round < 39) {
+        if (random && round % modulo == 0 && round < 48) {
             return validMoves[generator.nextInt(numValidMoves)];
         } else {
             Node node = new Node(null, me, state, 0, turn, round, numValidMoves, validMoves, 0, -100000, 100000);
