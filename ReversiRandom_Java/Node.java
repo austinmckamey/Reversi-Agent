@@ -32,7 +32,11 @@ class Node {
 		this.move = move;
 		this.alpha = alpha;
 		this.beta = beta;
-		if (depth < 6) {
+		int maxDepth = 6;
+		if (round > 40) {
+			maxDepth = 9;
+		}
+		if (depth < maxDepth) {
 			makeChildren();
 			pickChild();
 		} else {
@@ -92,11 +96,10 @@ class Node {
 		return (2 * myCount) - theirCount;
 	}
 	private double calculateMoves() {
-		double count = 0;
-		for(int i = 0; validMoves[i] != 0; i++) {count++;}
-		return (30 * count);
+		double mobility = 0;
+		for(int i = 0; validMoves[i] != 0; i++) {mobility++;}
+		return (3 * mobility);
 	}
-
 	private double calculateCount() {
 		double myCount = 0;
 		double theirCount = 0;
