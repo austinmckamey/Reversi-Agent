@@ -41,16 +41,18 @@ class Node {
 	}
 
 	private void calculateScore() {
+		double center = calculateCenter();
 		double count = calculateCount();
 		double corners = calculateCorners();
 		double edges = calculateEdges();
 		double moves = calculateMoves();
-		double sum = count + corners + edges + moves;
+		double sum = center + count + corners + edges + moves;
+		center = center / sum;
 		count = count / sum;
 		corners = corners /sum;
 		edges = edges /sum;
 		moves = moves /sum;
-		score =  (count) + (corners * 1000) + (edges * 50) + (moves * 20);
+		score =  (center * 50) + (count) + (corners * 1000) + (edges * 50) + (moves * 20);
 		if (turn == me) {
         	if (score > parent.alpha) {
         		parent.alpha = score;
@@ -62,21 +64,22 @@ class Node {
 			}
 		}
 	}
+	private double calculateCenter() {
+		double myCount = 0;
+		double theirCount = 0;
+		if (state[3][3] == me) {myCount++;} else if (state [3][3]!= 0) {theirCount++;}
+		if (state[3][4] == me) {myCount++;} else if (state [3][4]!= 0) {theirCount++;}
+		if (state[4][3] == me) {myCount++;} else if (state [4][3]!= 0) {theirCount++;}
+		if (state[4][4] == me) {myCount++;} else if (state [4][4]!= 0) {theirCount++;}
+		return (2 * myCount) - theirCount;
+	}
 	private double calculateCorners() {
 		double myCount = 0;
 		double theirCount = 0;
-		if (state[0][0] == me) {
-			myCount++;
-		} else if (state [0][0]!= 0) {theirCount++;}
-		if (state[0][7] == me) {
-			myCount++;
-		} else if (state [0][7]!= 0) {theirCount++;}
-		if (state[7][0] == me) {
-			myCount++;
-		} else if (state [7][0]!= 0) {theirCount++;}
-		if (state[7][7] == me) {
-			myCount++;
-		} else if (state [7][7]!= 0) {theirCount++;}
+		if (state[0][0] == me) {myCount++;} else if (state [0][0]!= 0) {theirCount++;}
+		if (state[0][7] == me) {myCount++;} else if (state [0][7]!= 0) {theirCount++;}
+		if (state[7][0] == me) {myCount++;} else if (state [7][0]!= 0) {theirCount++;}
+		if (state[7][7] == me) {myCount++;} else if (state [7][7]!= 0) {theirCount++;}
 		return (2 * myCount) - theirCount;
 	}
 	private double calculateEdges() {
