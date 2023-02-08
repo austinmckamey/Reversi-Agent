@@ -24,12 +24,17 @@ class RandomGuy {
     
     int validMoves[] = new int[64];
     int numValidMoves;
+
+    boolean random = false;
     
     
     // main function that (1) establishes a connection with the server, and then plays whenever it is this player's turn
-    public RandomGuy(int _me, String host) {
+    public RandomGuy(int _me, String host, String random) {
         me = _me;
         initClient(host);
+        if (Objects.equals(random, "-r")) {
+            this.random = true;
+        }
 
         int myMove;
         
@@ -62,8 +67,13 @@ class RandomGuy {
     // validMoves is a list of valid locations that you could place your "stone" on this turn
     // Note that "state" is a global variable 2D list that shows the state of the game
     private int move() {
-        Node node = new Node(null, me, state, 0, turn, round, numValidMoves, validMoves, 0, -100000,100000);
-        return node.pickMove();
+        int modulo = (turn == 2) ? 5 : 6;
+        if (random && round % modulo == 0 && round < 48) {
+            return validMoves[generator.nextInt(numValidMoves)];
+        } else {
+            Node node = new Node(null, me, state, 0, turn, round, numValidMoves, validMoves, 0, -100000, 100000);
+            return node.pickMove();
+        }
     }
     
     // generates the set of valid moves for the player; returns a list of valid moves (validMoves)
@@ -238,7 +248,11 @@ class RandomGuy {
     //   ipaddress is the ipaddress on the computer the server was launched on.  Enter "localhost" if it is on the same computer
     //   player_number is 1 (for the black player) and 2 (for the white player)
     public static void main(String args[]) {
-        new RandomGuy(Integer.parseInt(args[1]), args[0]);
+        if (args.length == 3) {
+            new RandomGuy(Integer.parseInt(args[1]), args[0], args[2]);
+        } else {
+            new RandomGuy(Integer.parseInt(args[1]), args[0], null);
+        }
     }
     
 }

@@ -33,9 +33,6 @@ class Node {
 		this.alpha = alpha;
 		this.beta = beta;
 		int maxDepth = 6;
-		if (round > 40) {
-			maxDepth = 9;
-		}
 		if (depth < maxDepth) {
 			makeChildren();
 			pickChild();
