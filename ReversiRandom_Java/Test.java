@@ -7,16 +7,16 @@ public class Test {
     public static void test1() {
         System.out.println("Starting Test");
         int[] valid = new int[64];
-        valid[0] = 19;
-        valid[1] = 25;
-        valid[2] = 26;
-        valid[3] = 30;
-        valid[4] = 33;
-        valid[5] = 37;
-        valid[6] = 38;
-        valid[7] = 47;
-        valid[8] = 51;
-        valid[9] = 53;
+        valid[0] = 11;
+        valid[1] = 13;
+        valid[2] = 23;
+        valid[3] = 25;
+        valid[4] = 29;
+        valid[5] = 30;
+        valid[6] = 33;
+        valid[7] = 34;
+        valid[8] = 38;
+        valid[9] = 43;
         int[][] state =
                 {{0,0,0,2,0,0,0,0},
                  {0,0,0,0,2,0,0,0},
