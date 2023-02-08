@@ -2,16 +2,6 @@ import java.util.*;
 
 class Node {
 
-	public static void main(String[] args) {
-		int[] valid = new int[64];
-		valid[0] = 27;
-		valid[1] = 28;
-		valid[2] = 35;
-		valid[3] = 36;
-		Node parent = new Node(null, 1, new int[8][8], 0, 1, 0, 4, valid, 0, -10000, 10000);
-		int move = parent.pickMove();
-	}
-
 	Node parent;
 	List<Node> children = new ArrayList();
 	Node bestChild;
@@ -27,16 +17,8 @@ class Node {
 	int move;
 
 	double score;
-	double alpha = -100000;
-	double beta = 100000;
-
-	public void setAlpha(double alpha) {
-		this.alpha = alpha;
-	}
-
-	public void setBeta(double beta) {
-		this.beta = beta;
-	}
+	double alpha;
+	double beta;
 
 	public Node(Node parent, int me, int[][] state, int depth, int turn, int round, int numValidMoves, int[] validMoves, int move , double alpha, double beta) {
 		this.parent = parent;
@@ -61,14 +43,14 @@ class Node {
 	private void calculateScore() {
 		double count = calculateCount();
 		double corners = calculateCorners();
-		double edges = calcualteEdges();
+		double edges = calculateEdges();
 		double moves = calculateMoves();
 		double sum = count + corners + edges + moves;
 		count = count / sum;
 		corners = corners /sum;
 		edges = edges /sum;
 		moves = moves /sum;
-		score =  (count) + (corners * 10) + (edges * 2) + (moves * 4);
+		score =  (count) + (corners * 1000) + (edges * 30) + (moves * 10);
 		if (turn == me) {
         	if (score > parent.alpha) {
         		parent.alpha = score;
@@ -89,7 +71,7 @@ class Node {
 		if (state[7][7] == me) {myCount++;} else if (state [7][7]!= 0) {thereCount++;}
 		return myCount - thereCount;
 	}
-	private double calcualteEdges() {
+	private double calculateEdges() {
 		double myCount = 0;
 		double thereCount = 0;
 		for (int i = 1; i < 7; i++) {if (state[0][i] == me) {myCount++;} else if (state [0][i]!= 0) {thereCount++;}}
@@ -101,7 +83,7 @@ class Node {
 	private double calculateMoves() {
 		double count = 0;
 		for(int i = 0; validMoves[i] != 0; i++) {count++;}
-		return (double) count;
+		return count;
 	}
 
 	private double calculateCount() {
@@ -118,6 +100,7 @@ class Node {
 		}
 		return myCount - theirCount;
 	}
+
 	private void makeChildren() {
 		int childrenTurn;
 		if (turn == 1) {
@@ -177,20 +160,14 @@ class Node {
 				valid[num] = 4*8 + 4;
 				num ++;
 			}
-//			System.out.println("Valid Moves:");
-//			for (i = 0; i < num; i++) {
-//				System.out.println(valid[i] / 8 + ", " + valid[i] % 8);
-//			}
 		}
 		else {
-//			System.out.println("Valid Moves:");
 			for (i = 0; i < 8; i++) {
 				for (j = 0; j < 8; j++) {
 					if (state[i][j] == 0) {
 						if (couldBe(state, i, j)) {
 							valid[num] = i*8 + j;
 							num ++;
-//							System.out.println(i + ", " + j);
 						}
 					}
 				}

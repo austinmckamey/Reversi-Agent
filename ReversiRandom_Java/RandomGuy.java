@@ -43,10 +43,10 @@ class RandomGuy {
 
                 myMove = move();
                 //myMove = generator.nextInt(numValidMoves);        // select a move randomly
+
+                String sel = myMove / 8 + "\n" + myMove % 8;
                 
-                String sel = validMoves[myMove] / 8 + "\n" + validMoves[myMove] % 8;
-                
-                System.out.println("Selection: " + validMoves[myMove] / 8 + ", " + validMoves[myMove] % 8);
+                System.out.println("Selection: " + myMove / 8 + ", " + myMove % 8);
                 
                 sout.println(sel);
             }
