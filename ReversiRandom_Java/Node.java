@@ -50,7 +50,7 @@ class Node {
 		corners = corners /sum;
 		edges = edges /sum;
 		moves = moves /sum;
-		score =  (count) + (corners * 1000) + (edges * 30) + (moves * 10);
+		score =  (count) + (corners * 1000) + (edges * 50) + (moves * 20);
 		if (turn == me) {
         	if (score > parent.alpha) {
         		parent.alpha = score;
@@ -64,26 +64,34 @@ class Node {
 	}
 	private double calculateCorners() {
 		double myCount = 0;
-		double thereCount = 0;
-		if (state[0][0] == me) {myCount++;} else if (state [0][0]!= 0) {thereCount++;}
-		if (state[0][7] == me) {myCount++;} else if (state [0][7]!= 0) {thereCount++;}
-		if (state[7][0] == me) {myCount++;} else if (state [7][0]!= 0) {thereCount++;}
-		if (state[7][7] == me) {myCount++;} else if (state [7][7]!= 0) {thereCount++;}
-		return myCount - thereCount;
+		double theirCount = 0;
+		if (state[0][0] == me) {
+			myCount++;
+		} else if (state [0][0]!= 0) {theirCount++;}
+		if (state[0][7] == me) {
+			myCount++;
+		} else if (state [0][7]!= 0) {theirCount++;}
+		if (state[7][0] == me) {
+			myCount++;
+		} else if (state [7][0]!= 0) {theirCount++;}
+		if (state[7][7] == me) {
+			myCount++;
+		} else if (state [7][7]!= 0) {theirCount++;}
+		return (2 * myCount) - theirCount;
 	}
 	private double calculateEdges() {
 		double myCount = 0;
-		double thereCount = 0;
-		for (int i = 1; i < 7; i++) {if (state[0][i] == me) {myCount++;} else if (state [0][i]!= 0) {thereCount++;}}
-		for (int i = 1; i < 7; i++) {if (state[i][0] == me) {myCount++;} else if (state [i][0]!= 0) {thereCount++;}}
-		for (int i = 1; i < 7; i++) {if (state[i][7] == me) {myCount++;} else if (state [i][7]!= 0) {thereCount++;}}
-		for (int i = 1; i < 7; i++) {if (state[7][i] == me) {myCount++;} else if (state [7][i]!= 0) {thereCount++;}}
-		return myCount - thereCount;
+		double theirCount = 0;
+		for (int i = 1; i < 7; i++) {if (state[0][i] == me) {myCount++;} else if (state [0][i]!= 0) {theirCount++;}}
+		for (int i = 1; i < 7; i++) {if (state[i][0] == me) {myCount++;} else if (state [i][0]!= 0) {theirCount++;}}
+		for (int i = 1; i < 7; i++) {if (state[i][7] == me) {myCount++;} else if (state [i][7]!= 0) {theirCount++;}}
+		for (int i = 1; i < 7; i++) {if (state[7][i] == me) {myCount++;} else if (state [7][i]!= 0) {theirCount++;}}
+		return (2 * myCount) - theirCount;
 	}
 	private double calculateMoves() {
 		double count = 0;
 		for(int i = 0; validMoves[i] != 0; i++) {count++;}
-		return count;
+		return (30 * count);
 	}
 
 	private double calculateCount() {
@@ -98,7 +106,7 @@ class Node {
 				}
 			}
 		}
-		return myCount - theirCount;
+		return (2 * myCount) - theirCount;
 	}
 
 	private void makeChildren() {
@@ -151,6 +159,9 @@ class Node {
 			}
 		}
 		bestChild = child;
+		if (child != null) {
+			score = child.score;
+		}
 	}
 
 	public int pickMove() {
