@@ -32,7 +32,7 @@ class Node {
 		this.move = move;
 		this.alpha = alpha;
 		this.beta = beta;
-		if (depth < 5) {
+		if (depth < 6) {
 			makeChildren();
 			pickChild();
 		} else {
